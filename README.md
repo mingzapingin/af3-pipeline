@@ -81,16 +81,19 @@ You need Python 3.11+ and pip.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-  <code>'''bash
+  '''bash
     python src/process_result.py \
       --input_folder path/to/cif_files \
       --output_folder path/to/output_folder \
-      --temperature 37</code>
+      --temperature 37
+  '''
     
   The script automatically uses:
 
+  '''bash
   vendor/prodigy_prot/src/prodigy_prot/Modified_predict_IC.py
   vendor/pdockq.py
+  '''
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -152,6 +155,6 @@ Project Link: [https://github.com/mingzapingin/af3-pipeline](https://github.com/
 * [AlphaFold3](https://github.com/deepmind/alphafold)
 * [PRODIGY](https://github.com/haddocking/prodigy)
 * [pDockQ](https://github.com/fteufel/alphafold-peptide-receptors)
-* [README_Template] (https://github.com/othneildrew/Best-README-Template)
+* [README_Template](https://github.com/othneildrew/Best-README-Template)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
