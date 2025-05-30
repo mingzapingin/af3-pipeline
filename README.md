@@ -5,7 +5,7 @@
 <h3 align="center">Alphafold3 Pipeline</h3>
 
   <p align="center">
-    project_description
+    A reproducible pipeline for converting AlphaFold3 output CIFs to PDB, scoring with Prodigy and pDockQ.
     <br />
     <a href="https://github.com/mingzapingin/af3-pipeline"><strong>Explore the docs »</strong></a>
     <br />
@@ -54,7 +54,6 @@ A reproducible pipeline for converting AlphaFold3 output CIFs to PDB, scoring wi
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
@@ -81,7 +80,7 @@ You need Python 3.11+ and pip.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-  '''bash
+  '''sh
     python src/process_result.py \
       --input_folder path/to/cif_files \
       --output_folder path/to/output_folder \
@@ -90,7 +89,7 @@ You need Python 3.11+ and pip.
     
   The script automatically uses:
 
-  '''bash
+  '''sh
   vendor/prodigy_prot/src/prodigy_prot/Modified_predict_IC.py
   vendor/pdockq.py
   '''
