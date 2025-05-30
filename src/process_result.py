@@ -92,8 +92,6 @@ def convert_cif_to_pdb_big(input_folder, output_folder):
 
     # Single-character chain IDs that are valid in standard PDB
     valid_chain_ids = [chr(x) for x in range(ord('A'), ord('Z') + 1)]
-    # If you also want digits, you could do something like:
-    # valid_chain_ids = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
     for cif_file in cif_files:
         base_name = os.path.splitext(os.path.basename(cif_file))[0]
@@ -123,11 +121,7 @@ def convert_cif_to_pdb_big(input_folder, output_folder):
 
                     # Copy over residues/atoms from old chain
                     for residue in chain:
-                        # Biopython 1.80+ has .copy(), or you can replicate manually
                         new_chain.add(residue.copy())
-                    # Alternatively:
-                    # for residue in chain:
-                    #     new_chain.add(residue.copy())
 
                     # Add new_chain to the new_model
                     new_model.add(new_chain)
@@ -170,16 +164,6 @@ def run_prodigy(output_folder, temperature=None, script_path=None):
 
     if script_path is None:
         raise ValueError("Path to PRODIGY script must be provided via --prodigy_script")
-
-    # Path to your 'predict_IC.py' script
-    #prodigy_script = r"C:\Users\mingz\Desktop\Alphafold\AF3\prodigy\src\prodigy_prot\predict_IC.py"
-    
-    # If no temperature was provided, default to 25°C
-    if temperature is None:
-        temperature = 25
-    else:
-        # Convert the incoming temperature (string) to a float if possible
-        temperature = float(temperature)
 
     pdb_files = glob.glob(os.path.join(output_folder, "*.pdb"))
     
@@ -247,9 +231,6 @@ def run_pdockq(output_folder, script_path=None):
 
     if script_path is None:
         raise ValueError("Path to pDockQ script must be provided via --pdockq_script")
-
-    # Path to your 'pdockq.py' script
-    #pdockq_script = r"C:\Users\mingz\Desktop\Alphafold\AF3\pdockq.py"
     
     # Find all .pdb files in the output folder
     pdb_files = glob.glob(os.path.join(output_folder, "*.pdb"))
@@ -274,21 +255,13 @@ def run_pdockq(output_folder, script_path=None):
             print(f"Error processing {pdb_file}:\n{e.output.decode('utf-8')}")
             continue
         
-        # Look for the line containing 'pDockQ='
-        # Example line: "pDockQ= 0.608 ,PPV= 0.9400192"
         pDockQ_val = None
         PPV_val = None
         
         for line in proc_output.splitlines():
             line = line.strip()
             if line.startswith("pDockQ="):
-                # Attempt to parse "pDockQ= 0.608 ,PPV= 0.9400192"
-                # Remove any commas or extra spaces as needed
-                # e.g. split by spaces or by commas
-                # Alternatively, you can do a more robust parse:
-                
-                # If the line always looks like "pDockQ= X ,PPV= Y"
-                # then we can do a simple approach:
+            
                 parts = line.replace(" ", "").split(",")  # => ["pDockQ=0.608", "PPV=0.9400192"]
                 if len(parts) == 2:
                     # Parse pDockQ
@@ -317,7 +290,7 @@ def main():
     parser = argparse.ArgumentParser(description="Convert .cif files to .pdb format using Biopython, then run Prodigy.")
     parser.add_argument("--input_folder", required=True, help="Path to the input folder containing .cif files.")
     parser.add_argument("--output_folder", required=True, help="Path to the output folder for .pdb files and summary.")
-    parser.add_argument("--temperature", required=False, help="Temperature (in °C) to use in PRODIGY calculation.")
+    parser.add_argument("--temperature", required=False, default= 25.0, help="Temperature (in °C) to use in PRODIGY calculation.")
     parser.add_argument("--big", action="store_true", default=False,  help="add this when .cif chain ID going to exceed 'Z'")
     parser.add_argument("--prodigy_script", required=False, default=default_prodigy_script,help="Path to Prodigy Modified_predict_IC.py script.")
     parser.add_argument("--pdockq_script", required=False, default=default_pdockq_script,help="Path to pDockQ script.")
@@ -345,5 +318,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-#python process_result.py --input_folder /Users/mac/Desktop/AF3/folds_2025_05_22_07_31/5b4x_all --output_folder /Users/mac/Desktop/AF3/folds_2025_05_22_07_31/5b4x_all/pdb --temperature 37
