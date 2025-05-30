@@ -81,19 +81,19 @@ You need Python 3.11+ and pip.
 ## Usage
 
   run script
-    '''sh
+    ```bash
     python src/process_result.py \
       --input_folder path/to/cif_files \
       --output_folder path/to/output_folder \
       --temperature 37
-    '''
+    ```
     
   The script automatically uses:
 
-    '''sh
+    ```bash
     vendor/prodigy_prot/src/prodigy_prot/Modified_predict_IC.py
     vendor/pdockq.py
-    '''
+    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
