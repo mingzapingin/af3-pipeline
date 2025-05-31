@@ -5,6 +5,7 @@ import glob
 import argparse
 import subprocess
 import string
+import json
 import pandas as pd
 from Bio.PDB.MMCIFParser import MMCIFParser
 from Bio.PDB.PDBIO import PDBIO
@@ -23,7 +24,48 @@ project_root = os.path.abspath(os.path.join(this_dir, os.pardir))
 vendor_dir = os.path.join(project_root, "vendor")
 
 default_pdockq_script  = os.path.join(vendor_dir, "pdockq.py")
-default_prodigy_script = os.path.join(vendor_dir, "prodigy_prot", "src", "prodigy_prot", "Modified_predict_IC.py")
+default_prodigy_script = os.path.join(vendor_dir, "prodigy", "src", "prodigy_prot", "Modified_predict_IC.py")
+
+def collect_confidence(input_folder):
+    """
+    Scan *folder* (recursively) for files whose names contain
+    'summary_confidences' and build a DataFrame with columns:
+    [iptm, ptm, ranking_score, min_pae].
+
+    The DataFrame index is the cleaned filename, e.g.
+    'fold_5b4x_all_summary_confidences_0.json' → 'fold_5b4x_all_0'.
+    """
+    rows = []
+
+    # ** recursive glob pattern **
+    pattern = os.path.join(input_folder, "**", "*summary_confidences*.json")
+
+    for path in glob.glob(pattern, recursive=True):
+        with open(path) as f:
+            data = json.load(f)
+
+        iptm  = float(data.get("iptm","nan"))
+        ptm   = float(data.get("ptm","nan"))
+        rank  = float(data.get("ranking_score","nan"))
+
+        flat  = [v for row in data.get("chain_pair_pae_min", []) for v in row]
+        min_pae = float(min(flat)) if flat else float("nan")
+
+        filename = os.path.splitext(os.path.basename(path))[0]
+        key = filename.replace("_summary_confidences", "_model")
+
+        rows.append(
+            dict(FileName=key,
+                 Json_path=path,
+                 iptm=iptm,
+                 ptm=ptm,
+                 ranking_score=rank,
+                 min_pae=min_pae,)
+        )
+
+    df = pd.DataFrame(rows)
+
+    return df
 
 def convert_cif_to_pdb(input_folder, output_folder):
     """
@@ -296,7 +338,10 @@ def main():
     parser.add_argument("--pdockq_script", required=False, default=default_pdockq_script,help="Path to pDockQ script.")
     args = parser.parse_args()
     
-    # Step 1: Convert CIF -> PDB
+    # Step 1.1: Collect AF3 Confidence
+    confidence_df = collect_confidence(args.input_folder)
+
+    # Step 1.2: Convert CIF -> PDB
     if not args.big:
         pdb_sum_df = convert_cif_to_pdb(args.input_folder, args.output_folder)
     else:
@@ -309,7 +354,7 @@ def main():
     prodigy_results_df = run_prodigy(args.output_folder, args.temperature, args.prodigy_script)
 
     # Step 4: Combine three df and output as one
-    summary_df = (pdb_sum_df  .merge(pdockq_results_df, on="PDB_File", how="outer")
+    summary_df = (pdb_sum_df.merge(confidence_df, on="FileName", how="outer").merge(pdockq_results_df, on="PDB_File", how="outer")
                                     .merge(prodigy_results_df, on="PDB_File", how="outer"))
     summary_file = os.path.join(args.output_folder, "summary.xlsx")
     summary_df.to_excel(summary_file, index=False)
