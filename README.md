@@ -79,6 +79,7 @@ You need Python 3.11+ and pip.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+  You need to extract all model.cif and summary_confidence.json into one input_folder. The script will automatically process all models and confidence in the input folder and create the output in the specified output_folder.
 
   To run script:
     
@@ -92,6 +93,24 @@ You need Python 3.11+ and pip.
 
     vendor/prodigy_prot/src/prodigy_prot/Modified_predict_IC.py
     vendor/pdockq.py
+
+  The output in the output_folder will includes:
+
+    - FileName
+    - .cif path
+    - .pdb path
+    - .pdb filename
+    - .json path
+    - iptm
+    - ptm
+    - min PAE
+    - Ranking Score
+    - pDockq
+    - PPV
+    - all PRODIGY outputs includes:
+      - Predicted binding affinity (kcal.mol-1)
+      - Temperature
+      - Predicted dissociation constant (M)
     
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -101,9 +120,11 @@ You need Python 3.11+ and pip.
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Process AF3's confidence values
-    - [ ] ptm
-    - [ ] iptm
+- [/] Process AF3's confidence values
+    - [/] iptm
+    - [/] ptm
+    - [/] min PAE
+    - [/] Ranking Score
 
 See the [open issues](https://github.com/mingzapingin/af3-pipeline/issues) for a full list of proposed features (and known issues).
 
