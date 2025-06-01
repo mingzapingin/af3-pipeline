@@ -96,21 +96,23 @@ You need Python 3.11+ and pip.
 
   The output in the output_folder will includes:
 
-    - FileName
-    - .cif path
-    - .pdb path
-    - .pdb filename
-    - .json path
-    - iptm
-    - ptm
-    - min PAE
-    - Ranking Score
-    - pDockq
-    - PPV
-    - all PRODIGY outputs includes:
-      - Predicted binding affinity (kcal.mol-1)
-      - Temperature
-      - Predicted dissociation constant (M)
+    - all converted .pdb file
+    - summary excel
+      - FileName
+      - .cif path
+      - .pdb path
+      - .pdb filename
+      - .json path
+      - iptm
+      - ptm
+      - min PAE
+      - Ranking Score
+      - pDockq
+      - PPV
+      - all PRODIGY outputs includes:
+        - Predicted binding affinity (kcal.mol-1)
+        - Temperature
+        - Predicted dissociation constant (M)
     
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
