@@ -127,6 +127,7 @@ You need Python 3.11+ and pip.
     - [/] ptm
     - [/] min PAE
     - [/] Ranking Score
+- [] Argument for specifying pair of chains to be process by PRODIGY
 
 See the [open issues](https://github.com/mingzapingin/af3-pipeline/issues) for a full list of proposed features (and known issues).
 
